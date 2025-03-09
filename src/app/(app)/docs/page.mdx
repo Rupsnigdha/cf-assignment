@@ -1,0 +1,175 @@
+# Submission for the Curiflow Takehome Assignment\*
+
+9<sup>th</sup> March, 2024
+
+![The finished product : This shows the two execution screens](/docs/hero.png)
+
+<figcaption>
+  The finished product : This shows the two execution screens
+</figcaption>
+
+This is my submission for the Curiflow Takehome assignment\*. The asterisk (\*) has to be included because the submission deadline was like 24 hours earlier, but I was nowhere satisfied with my implemetation of the task then.
+
+I was tasked with re-imagining and redesigning both the User Interface and the User Experience for two components of the existing _(maybe?)_ [Curiflow](https://www.curiflow.com/) webapp.
+
+This blog is, hence, divided into three parts. The first part goes over setting up the repository locally. You may want to do this if you want to view the code. The second part goes over the packages, libraries and resources used to fulfill the task, and why they were chosen over the alternative. The third part goes over the design decisions made; i.e. which components were changed, and more importantly, why?
+
+## Genesis - Getting Started
+
+If you don't care about setting up the code locally, you may skip this part.
+
+Assuming that you are still here, follow along! First, make sure that you have [git installed](https://git-scm.com/downloads). Then, in your terminal, do the following -
+
+```sh
+git clone https://github.com/Rupsnigdha/cf-assignment.git
+cd cf-assignment
+code .
+```
+
+Assuming you also have [VS Code installed](https://code.visualstudio.com/download), this should open up a new VS Code window with all the relevant code. Next, you need to make sure you have [Node installed](https://nodejs.org/en/download). If you do, you can do the following -
+
+```sh
+npm install
+npm run dev
+```
+
+If everything was done correctly, the website should start at [http://localhost:3000](http://localhost:3000/docs).
+
+## Exodus - Selecting the Technology
+
+This project uses Next.js v19. This was a clear choice because it has extensively been used in the existing webapp.
+
+TailwindCSS v4 was used as the CSS Framework. The tailwind-animate plugin was used for the animations, and tailwind/typography plugin was used for rendering the styling for this blog.
+
+For the UI library, ShadcnUI was chosen because the organization already used it. It is built on top of radix-ui and offers great accessibility, and by extension UX, much more so than any other UI library. The Table in the '/dashboard' route uses the Data Table of ShadcnUI built on top of TanStack Table. This allows for options like filtering, sorting etc.
+
+For state-management, zustand was used. It too was chosen because the organization uses it. It makes state management very easy, due to global stores that can be called by components all across the DOM Tree. It is also more intuitive to me than something like Redux.
+
+For icons, lucide-react was used, as ShadcnUI already has that as a dependency, and it did not make any sense to bloat the project with more dependencies.
+
+MDX was used to render this blog. There were virtually no other options here for rendering markdown in Nextjs.
+
+## Revelation - Proposed Improvements in the User Interface
+
+This section talks about the Proposed Improvements in the User Interface. As I mentioned to earlier, I was tasked with improving two interfaces, and thus, I will split this section into two, and talk about them one by one. However, it is essential to have a rough user story first. As nothing was provided, I came up with one on my own. I am not sure how much of this user story reflects the actual end user, but a lot of the design choices were made with this consideration.
+
+### The User Story
+
+John is a male working in the US Health Industry. He is in his mid 30s, and is responsible for managing the data pipelines of ABC Health Co. by using this application. He has some tech knowledge, however, he is not too proficient at writing code.
+
+### The Test Deployment component
+
+![The Given Execution Deployment Component](/docs/1.png)
+
+<figcaption>The Given Execution Deployment Component</figcaption>
+
+From what I understood from the included videos, John would use this component to test workflows. More accurately, he would provide dummy data to a particular workflow, and the workflow will provide him with a JSON response as the output. In case the execution failed for some reason, the UI will inform him of that as well.
+
+#### Improvements
+
+![Improvements in the Output](/docs/7.png)
+
+<figcaption>Improvements in the Output</figcaption>
+
+- **Formatting the Output**: The existing output was a JSON response from the server. However, it was rendering in a single line about a mile long. That is not desirable because, even though John has generated the output, there is no way for him to make sense of what he has generated. His only option seems to be to copy the entire output using `Double Click` -> `Ctrl/Cmd+C` and then pasting it somewhere to fromat it `Ctrl/Cmd+V`. Thus, even at his most efficient, it takes him two mouse clicks and four keyboard strokes to even start making sense of the data.
+
+  The new design proposes a different solution. Since the incoming string is a JSON response, that can easily be rendered inside a HTML `<pre>` tag. This allows us to format the JSON so that it is easily readable. Two new buttons have also been added, Copy and Download, which allows John to copy the output to his clipboard (what he had been already doing in one mouse click), as well as download it, in case he wants to use it somewhere else.
+
+![Preventing Layout Shifts](/docs/2.png)
+
+<figcaption>Preventing Layout Shifts</figcaption>
+
+- **Preventing Layout Shifts**: The two sections of the screen, the logs, as well as the output, seemed very likely to exceed the specified screen height once a flow was run. This is, of course, not desirable since [John does not like layout shifts](https://web.dev/articles/cls).
+
+  Thus, a fixed height of the table of logs and output was specified so that John does not have to experience as many layout shifts.
+
+![Form Input](/docs/5.png)
+
+<figcaption>Form Input</figcaption>
+
+- **Form Input**: Since John has already specified the inputs, the application should already know what properties are required to run the flow.
+
+  Thus, instead of letting John type out a JSON input, which, there is a very high chance he will mess up doing anyway, we can let John fill out a form. The labels can be the keys, and the form input values can be, well, the values, which can later be joined by the application into a JSON. A button has also been added so that if John was more either comfortable, or found himself more efficient writing the JSONs from scratch, his efficiency would not be hampered.
+
+![Improvements in the logs of processes](/docs/6.png)
+
+<figcaption>Improvements in the logs of processes</figcaption>
+
+- **Logs**: The existing logs were a mess. They had weird layout shifts, did not allow John to see which processes would run when, and did not provide enough meaningful information.
+
+  Like the input form, the "processes" that would run, would have already been specified by John. Thus, the application could make an API call to the backend to fetch the list of processes that would run in the correct order. This provides John with a good overview of what process is running when. A lot of the UI for Logs was inspired by how vercel handles their deployment logs. The time to complete each process is shown, which should be of paramount importance to John, as it helps him identify the bottlenecks of his flow. The time at which the process was completed is also displayed.
+
+![Improvements in the Select Deployment Dropdown](/docs/3.png)
+
+<figcaption>Improvements in the Select Deployment Dropdown</figcaption>
+
+- **Select Deployment**: The existing implementation of the Dropdown to select the deployment was fine, and arguably did not need a change. However, this change is still proposed, an can be either accepted or rejected by a A/B test.
+
+  The current implementation extends the trigger for the dropdown to also include the label. This is in accordance with [Apple's design recommendation of pull down buttons](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons). This lets John see the label his selection would directly relate with.
+
+#### Testing the Component
+
+Head on over to the `/canvas` url. You will find the Run Button on the bottom left of the page. It is inside the Sidebar (more on that later). The default view is the Form View, as it is more intuitive for the user. However, you can switch to the JSON view as well. Running the execute button with any (or no) inputs will trigger a success. I am using zustand's states to manage the states of each process. The actual application would probably use a TCP connection with the server to fetch the same data.
+
+If you want to test the failed flow, switch to the JSON view, and paste the following
+
+```json
+{fail}
+```
+
+This emulates a failure in the process.
+
+#### Further Scope for Improvements
+
+There is _still_ further scope for improvement.
+
+- Icons can be added to logs, which show irrespective of the time to resolve and indicate the status of each process, thus allowing John to associate a particular icon with a particular status of a process. This lets him get more information out of the interface faster.
+- Proper padding and spacing for the Form View is required.
+
+### The Deployment Dashboard component
+
+![Given UI for the Deployment Dashboard Component](/docs/8.png)
+
+<figcaption>Given UI for the Deployment Dashboard Component</figcaption>
+
+The Deployment Dashboard provides John with a list of executions of the deployment that had run previously. He is also able to manage the description and the tags associated with the deployment, as well as delete the deployment.
+
+#### Improvements
+
+![The New Side Panel](/docs/9.png)
+
+<figcaption>The New Side Panel</figcaption>
+
+- **Removing the Side Panel**: This page as well as the previous `/canvas` page had a side panel. But, both of them were very inconsistent. However, John would prefer consistency in the application he uses. Thus, a new collapsible side-navigation bar was created. The header and footer of this bar stays consistent throughout the application, while the body of the bar changes to accomodate for actions in the current page. This freed up a lot of space from the design, which can now be used to display other important data that John might be interested in.
+
+![The "Information Panel"](/docs/10.png)
+
+<figcaption>The "Information Panel"</figcaption>
+
+- **Cleaning up the Information Panel**: The "information panel" at the top provides John with information of the current deployment. Information was being repeated in this panel, as well as the sidebar, and so that duplication was minimized. This interface also had edit buttons, which presumably allowed John to edit the description and the tags here. The editing options, as well as the option to delete the deployment was moved to a settings button.
+
+  This displays a popover where John can do the edits. This screen also provides us with extra space to include all other relevant edits to a particular deployment that John can either do now, or may be able to do later with subsequent feature releases of the application. The tags can be clicked on to remove, and the plus sign can be used to trigger a dropdown with all the present tags, as well as ways to add new tags. The delete button was also emphasized with red instead of the color used, and the label "Delete" was added. This is because, deleting a deployment has to be a major decision. The text alongside the icon, along with the background, are all present to emphasize that.
+
+![The new Mark for Review Column](/docs/11.png)
+
+<figcaption>The new Mark for Review Column</figcaption>
+
+- **Renaming of the "Feedback" Column**: The table featured a "feedback" column which was ambiguous and did not provide much information on what to do with said column to John. Instead, it was renamed to "Mark for Review". This has a very specific meaning associated, and John can use it to mark particular executions for review (maybe executions that have failed, or executions that took a long time to complete).
+
+![Improvements in the table](/docs/12.png)
+
+<figcaption>Improvements in the table</figcaption>
+
+- **Improvements in the Table**: The table was modified to implement TanStack table. This now allows John to sort the table by various different columns. For example, he may want to sort the table by status, so that he can inspect the processes that failed. He may want to sort the table by latency to indentify bottlenecks. He may also want to sort it by the ones Marked for Review to inspect those processes. Filtering options were also added, so that John can filter the executions by name or execution ID or input or something. This allows him to inspect all executions run by alice@gmail.com for example. The "expanded view" of the row did not have much changes, other than removing the execution ID as it was already present in the row in which John would have to click to toggle the expanded view. The buttons to copy and download were implemented, and although they do not contain any labels here, the colors and the icons have been kept the same as in in the `/canvas` page. This allows John to associate the icons with their meanings.
+
+#### Testing the Component
+
+Head on over to the `/dashboard` url. You can play around with the table there.
+
+### Other Improvements
+
+![The ](/docs/3.png)
+
+<figcaption>Improvements in the Select Deployment Dropdown</figcaption>
+
+The biggest "other improvement" was the sidebar. This was implemented for two reasons. One, as stated above, to ensure more consistency in between the pages. Two, it was to free up space in the `/canvas` route. This is because, that page uses React Flow. Thus, John would want as much screen real-estate as possible to actually "view" his workflow. Thus, the sidebar, as well as the top navigation bar was eating up precious pixels. The current implementation moves everything to the sidebar (inspired from the Slack and Discord UIs) to give John as much space as possible. The sidebar can also be collapsed, and still used by clicking on the buttons. The two primary buttons in the top navigation was moved to the footer of the sidebar, allowing John to still access them.

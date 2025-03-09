@@ -21,7 +21,7 @@ import { NavUser } from "./nav-user";
 import ContentDashboard from "./content-dashboard";
 import { NavHeader } from "./nav-header";
 
-import { ArrowRightLeft, ChevronRight } from "lucide-react";
+import { ArrowRightLeft, BookText, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import ContentCanvas from "./content-canvas";
 
@@ -68,6 +68,22 @@ export function AppSidebar() {
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     Switch to{" "}
                     {pathname.endsWith("dashboard") ? "Canvas" : "Dashboard"}{" "}
+                  </div>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground relative hover:cursor-pointer"
+                asChild
+              >
+                <Link href="/docs">
+                  <div className="h-8 w-8">
+                    <BookText />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    View Docs
                   </div>
                 </Link>
               </SidebarMenuButton>
