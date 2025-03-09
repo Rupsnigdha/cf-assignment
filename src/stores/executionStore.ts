@@ -29,7 +29,7 @@ interface ExecutionStore {
 };
 
 export const useExecutionStore = create<ExecutionStore>((set) => ({
-  isDialogOpen: true,
+  isDialogOpen: false,
   input: "{}",
   output: undefined,
   selectedVersion: 'v3.0.0 beta',

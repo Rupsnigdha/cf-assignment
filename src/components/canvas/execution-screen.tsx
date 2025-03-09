@@ -138,7 +138,6 @@ export default function ExecutionScreen() {
           <DialogTitle>Execute Flow</DialogTitle>
           <DialogDescription className="text-sm">
             Enter the Deployment Name and Request Payload to execute the flow.
-            {isExecuting ? "t" : "f"}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
