@@ -23,7 +23,7 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import { useNotificationsStore } from "@/stores/notificationsStore";
 import { usePathname } from "next/navigation";
-import { useExecutionStore } from "@/stores/ui/executionStore";
+import { useExecutionStore } from "@/stores/executionStore";
 
 import {
   Bell,
