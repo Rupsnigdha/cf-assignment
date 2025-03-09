@@ -1,8 +1,7 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Page() {
   return (
