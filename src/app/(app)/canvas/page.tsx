@@ -1,14 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { counterStore } from "@/stores/counterStore";
+
+import { ReactFlow, Background, Controls } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
 export default function Home() {
-  const { count, increment, decrement } = counterStore();
   return (
-    <>
-      <div>Count: {count}</div>
-      <Button onClick={increment}>+</Button>
-      <Button onClick={decrement}>+</Button>
-    </>
+    <ReactFlow>
+      <Background />
+      <Controls />
+    </ReactFlow>
   );
 }
